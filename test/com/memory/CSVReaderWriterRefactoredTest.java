@@ -81,8 +81,6 @@ class CSVReaderWriterRefactoredTest {
 
             assertEquals(result[0], "test3");
             assertEquals(result[1], randomThree);
-
-            readerWriter.close();
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
