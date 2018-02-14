@@ -42,7 +42,7 @@ public class CSVReaderWriterRefactored {
         //thread operation could be considered very fast (I/O operation) anyway,
         //if there is not place in the queue the execute can call RejectedExecutionException and we
         //need to handle the logic manually
-        executor.submit(() -> {
+        executor.execute(() -> {
             try {
                 writer.write(columns);
             } catch (IOException | InterruptedException e) {
@@ -52,9 +52,8 @@ public class CSVReaderWriterRefactored {
     }
 
     public boolean read(String[] columns) throws ExecutionException, InterruptedException {
-        FutureTask<Boolean> future = new FutureTask(() -> reader.read(columns));
-        executor.submit(future);
-        return future.get();
+        Future<Boolean> toReturn = executor.submit(() -> reader.read(columns));
+        return toReturn.get();
     }
 
     //Values passed by reference are not valid in Java.
