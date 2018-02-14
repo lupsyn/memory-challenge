@@ -7,11 +7,12 @@ package com.memory;
  * <p>
  * General comments :
  * <p>
- * 1- Read and write are not thread safe
+ * 1- READ and write are not thread safe, and in a read method it's implicit Strings are passed by reference
+ * which is not possible case in java.
  * <p>
  * 2- This class come without tests, TDD is always a good mode 'how to write code'
  * <p>
- * 3- This class violates the Single Responsibility Principle (Read and Write in same class)
+ * 3- This class violates the Single Responsibility Principle (READ and WRITE in same class)
  * and also the Don't Repeat Yourself principle (for example the read method has in common lot of code)
  * I would suggest to break the responsibility of reading and writing to separate classes which could also be derived
  * from some interface.
@@ -50,6 +51,8 @@ public class CSVReaderWriter {
     public void open(String fileName, Mode mode) throws Exception {
         // We should check parameters. For example, whether file name is valid.
         if (mode == Mode.Read) {
+            //Also the file reader and file writer should be closed so why are declared
+            //as local variable?
             _bufferedReader = new BufferedReader(new FileReader(fileName));
         } else if (mode == Mode.Write) {
             FileWriter fileWriter = new FileWriter(fileName);
@@ -107,6 +110,7 @@ public class CSVReaderWriter {
 
     //Why this method is not thread safe at all ?
     //Internally this method is same of the one above.
+    //Parameters are passed by value in java, so column1 and 2 will be never modified.
     public boolean read(String column1, String column2) throws IOException {
         // If you were to use these constants and had two places where you need them
         // then you should make them global class static final constant
